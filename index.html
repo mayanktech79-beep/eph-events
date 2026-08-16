@@ -496,7 +496,7 @@
 
     function loadPublicConfig() {
       return new Promise((resolve, reject) => {
-        if (!API_URL || API_URL.includes("PASTE_YOUR")) {
+        if (!API_URL || API_URL.includes("https://script.google.com/macros/s/AKfycbzbbzSDFPMHy0q2ANZLBBSFBSvm5W8c1slFMifHSe3CcbXgaFlU_EucBKw0XJh4dxd5/exec")) {
           reject(new Error("API_URL has not been configured yet."));
           return;
         }
