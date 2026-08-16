@@ -136,17 +136,17 @@
         <div class="glass-card p-5 rounded-xl">
           <i class="fa-solid fa-calendar-days text-gold-500 text-xl mb-2"></i>
           <span class="block text-xs uppercase tracking-wider text-gray-400">Dates</span>
-          <span id="display-dates" class="font-serif font-bold text-base text-white">October 31, 2026</span>
+          <span id="display-dates" class="font-serif font-bold text-base text-white">October 31 - November 1, 2026</span>
         </div>
         <div class="glass-card p-5 rounded-xl">
           <i class="fa-solid fa-location-dot text-gold-500 text-xl mb-2"></i>
           <span class="block text-xs uppercase tracking-wider text-gray-400">Venue</span>
-          <span id="display-venue" class="font-serif font-bold text-base text-white">MGSIPA, Sector 26, Chandigarh</span>
+          <span id="display-venue" class="font-serif font-bold text-base text-white">Amity University, Mohali</span>
         </div>
         <div class="glass-card p-5 rounded-xl">
           <i class="fa-solid fa-ticket text-gold-500 text-xl mb-2"></i>
           <span class="block text-xs uppercase tracking-wider text-gray-400">Delegate Fee</span>
-          <span id="display-fee" class="font-serif font-bold text-base text-gold-400">₹1,800 / Delegate</span>
+          <span id="display-fee" class="font-serif font-bold text-base text-gold-400">₹3,800 / Delegate</span>
         </div>
       </div>
 
@@ -719,76 +719,156 @@
       });
     }
 
-    function openCommitteeModal(committeeName) {
-      const committee = (publicData.committees || []).find(
-        c => c.name === committeeName
-      );
+  function openCommitteeModal(committeeName) {
 
-      if (!committee) return;
+  const committees = Array.isArray(publicData?.committees)
+    ? publicData.committees
+    : [];
 
-      const taken = new Set((publicData.allotted || {})[committeeName] || []);
+  const committee = committees.find(
+    c => String(c.name).trim() === String(committeeName).trim()
+  );
 
-      let html = `
-        <div class="mb-6 border-b border-gray-800 pb-4">
-          <span class="text-xs uppercase tracking-widest text-gold-400 font-bold">Committee Matrix</span>
-          <h3 class="text-2xl font-serif font-bold text-white mt-1">${escapeHtml(committee.name)}</h3>
-          <p class="text-xs text-gray-300 mt-2">
-            <strong class="text-gray-400">Agenda:</strong> ${escapeHtml(committee.agenda)}
-          </p>
-          <div class="flex gap-4 mt-4 text-xs">
-            <span class="bg-navy-900 px-3 py-1.5 rounded border border-gray-700 text-gray-200">
-              <i class="fa-solid fa-flag mr-1 text-gold-400"></i>
-              Total Portfolios:
-              <strong>${committee.countries?.length || 0}</strong>
-            </span>
-            <span class="bg-navy-900 px-3 py-1.5 rounded border border-gray-700 text-green-400">
-              <i class="fa-solid fa-circle-check mr-1"></i>
-              Verified & Paid:
-              <strong>${taken.size}</strong>
-            </span>
-          </div>
+  if (!committee) {
+    alert("Committee information could not be loaded.");
+    return;
+  }
+
+  const countries = Array.isArray(committee.countries)
+    ? committee.countries
+    : [];
+
+  const allotted =
+    publicData?.allotted?.[committee.name] || [];
+
+  const taken = new Set(
+    Array.isArray(allotted) ? allotted : []
+  );
+
+  let html = `
+    <div class="mb-6 border-b border-gray-800 pb-4">
+
+      <span class="text-xs uppercase tracking-widest text-gold-400 font-bold">
+        Committee Matrix
+      </span>
+
+      <h3 class="text-2xl font-serif font-bold text-white mt-1">
+        ${escapeHtml(committee.name)}
+      </h3>
+
+      <p class="text-xs text-gray-300 mt-2">
+        <strong class="text-gray-400">Agenda:</strong>
+        ${escapeHtml(committee.agenda || "TBA")}
+      </p>
+
+      <div class="flex flex-wrap gap-4 mt-4 text-xs">
+
+        <span class="bg-navy-900 px-3 py-1.5 rounded border border-gray-700 text-gray-200">
+          <i class="fa-solid fa-flag mr-1 text-gold-400"></i>
+          Total Portfolios:
+          <strong>${countries.length}</strong>
+        </span>
+
+        <span class="bg-navy-900 px-3 py-1.5 rounded border border-gray-700 text-green-400">
+          <i class="fa-solid fa-circle-check mr-1"></i>
+          Verified & Paid:
+          <strong>${taken.size}</strong>
+        </span>
+
+      </div>
+
+    </div>
+
+    <h4 class="text-sm font-bold text-gold-400 uppercase tracking-wider mb-3">
+      Available Portfolios
+    </h4>
+
+    <p class="text-xs text-gray-400 mb-4">
+      Green/available portfolios can be selected during registration.
+      Red portfolios have already been allotted.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+  `;
+
+  if (countries.length === 0) {
+
+    html += `
+      <div class="col-span-full text-center py-8 text-gray-400">
+        No portfolios have been configured for this committee yet.
+      </div>
+    `;
+
+  } else {
+
+    countries.forEach(country => {
+
+      const isTaken = taken.has(country);
+
+      const statusClass = isTaken
+        ? "bg-red-950/40 border-red-500/60 text-red-300"
+        : "bg-green-950/30 border-green-500/40 text-green-300";
+
+      const statusBadge = isTaken
+        ? `
+          <span class="text-[10px] text-red-400 font-bold block mt-1">
+            <i class="fa-solid fa-circle-xmark mr-1"></i>
+            Verified / Allotted
+          </span>
+        `
+        : `
+          <span class="text-[10px] text-green-400 font-bold block mt-1">
+            <i class="fa-solid fa-circle-check mr-1"></i>
+            Available
+          </span>
+        `;
+
+      html += `
+        <div class="p-3 rounded-lg border ${statusClass}
+                    flex flex-col justify-between text-xs">
+
+          <span class="font-semibold">
+            ${escapeHtml(country)}
+          </span>
+
+          ${statusBadge}
+
         </div>
-
-        <h4 class="text-sm font-bold text-gold-400 uppercase tracking-wider mb-3">
-          Country Allotment Matrix
-        </h4>
-
-        <p class="text-xs text-gray-400 mb-4">
-          Portfolios marked in <span class="text-red-400 font-bold">Red</span>
-          are already registered and verified.
-        </p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
       `;
 
-      (committee.countries || []).forEach(country => {
-        const isTaken = taken.has(country);
+    });
 
-        const statusClass = isTaken
-          ? "bg-red-950/40 border-red-500/60 text-red-300"
-          : "bg-navy-900 border-gray-700 text-gray-200";
+  }
 
-        const statusBadge = isTaken
-          ? "<span class='text-[10px] text-red-400 font-bold block'>Verified / Allotted</span>"
-          : "<span class='text-[10px] text-gray-400 block'>Available</span>";
+  html += `
+    </div>
 
-        html += `
-          <div class="p-3 rounded-lg border ${statusClass} flex flex-col justify-between text-xs">
-            <span class="font-semibold">${escapeHtml(country)}</span>
-            <div class="mt-2">${statusBadge}</div>
-          </div>
-        `;
-      });
+    <div class="mt-6 text-center">
+      <button
+        onclick="closeCommitteeModal()"
+        class="px-5 py-2 rounded-lg bg-burgundy-800
+               hover:bg-burgundy-700 text-gold-400
+               border border-gold-500/30 text-sm font-semibold">
+        Close
+      </button>
+    </div>
+  `;
 
-      html += "</div>";
+  const content =
+    document.getElementById("modal-committee-content");
 
-      document.getElementById("modal-committee-content").innerHTML = html;
-      document.getElementById("committeeModal").classList.remove("hidden");
-    }
+  const modal =
+    document.getElementById("committeeModal");
 
-    function closeCommitteeModal() {
-      document.getElementById("committeeModal").classList.add("hidden");
-    }
+  if (!content || !modal) {
+    console.error("Committee modal elements not found.");
+    return;
+  }
+
+  content.innerHTML = html;
+
+  modal.classList.remove("hidden");
+}
 
     /* ---------- PAYMENT SCREENSHOT ---------- */
 
