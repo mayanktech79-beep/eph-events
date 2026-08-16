@@ -870,7 +870,13 @@ onclick="openCommitteeModal(this.dataset.committee)"
 
   modal.classList.remove("hidden");
 }
+function closeCommitteeModal() {
+  const modal = document.getElementById("committeeModal");
 
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
     /* ---------- PAYMENT SCREENSHOT ---------- */
 
     function handleImageUpload(element) {
