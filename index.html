@@ -37,18 +37,191 @@
     }
   </script>
 
-  <style>
-    .gold-gradient-text {
-      background: linear-gradient(135deg, #FFF099 0%, #D4AF37 50%, #AA7C11 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .glass-card {
-      background: rgba(28, 37, 65, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(212, 175, 55, 0.25);
-    }
-  </style>
+<style>
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFF099 0%, #D4AF37 50%, #AA7C11 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass-card {
+  background: rgba(28, 37, 65, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+
+/* =========================================================
+   EPHEMERAL MUN — CINEMATIC VISUAL SYSTEM
+   ========================================================= */
+
+:root {
+  --emun-navy: #050A16;
+  --emun-navy-2: #0B1220;
+  --emun-burgundy: #3A0D18;
+  --emun-burgundy-dark: #220812;
+  --emun-gold: #C9A227;
+  --emun-gold-soft: #E5C766;
+  --emun-white: #F5F5F0;
+  --emun-muted: #A8ADB8;
+}
+
+/* ---------- GLOBAL ATMOSPHERE ---------- */
+
+body {
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(201, 162, 39, 0.10),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #050A16 0%,
+      #070B15 50%,
+      #03060D 100%
+    );
+}
+
+/* ---------- CINEMATIC LIGHT ---------- */
+
+.emun-light {
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(
+    circle,
+    rgba(201, 162, 39, 0.08) 0%,
+    rgba(201, 162, 39, 0.03) 35%,
+    transparent 70%
+  );
+  filter: blur(20px);
+}
+
+/* ---------- GOLD DIVIDER ---------- */
+
+.emun-divider {
+  width: 90px;
+  height: 1px;
+  margin: 14px auto;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--emun-gold),
+    transparent
+  );
+}
+
+/* ---------- PREMIUM CARD ---------- */
+
+.emun-premium-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(11, 18, 32, 0.94),
+      rgba(5, 10, 22, 0.97)
+    );
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.emun-premium-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 20%,
+      rgba(201, 162, 39, 0.035),
+      transparent 80%
+    );
+}
+
+.emun-premium-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(201, 162, 39, 0.42);
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.45),
+    0 0 30px rgba(201, 162, 39, 0.06);
+}
+
+/* ---------- GOLD TEXT ---------- */
+
+.emun-gold-text {
+  background: linear-gradient(
+    120deg,
+    #C9A227,
+    #F1D878,
+    #C9A227
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- SECTION REVEAL ---------- */
+
+.emun-reveal {
+  opacity: 0;
+  transform: translateY(25px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.emun-reveal.emun-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- SUBTLE GRAIN ---------- */
+
+.emun-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+}
+
+/* ---------- GOLD GLOW ---------- */
+
+.emun-gold-glow {
+  text-shadow:
+    0 0 10px rgba(201, 162, 39, 0.18),
+    0 0 30px rgba(201, 162, 39, 0.08);
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 640px) {
+
+  .emun-light {
+    width: 260px;
+    height: 260px;
+  }
+
+  .emun-premium-card:hover {
+    transform: none;
+  }
+
+}
+</style>
 </head>
 <body class="bg-navy-900 text-gray-100 font-sans antialiased selection:bg-gold-500 selection:text-navy-900 min-h-screen flex flex-col justify-between">
 
